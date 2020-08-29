@@ -1,24 +1,32 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { useStoredState } from './hooks';
 import { move } from './utils';
+import LocalStorage from './Storage';
 import Note from './Note';
+
+const EMPTY_NOTE_DATA = {
+  title: '',
+  text: '',
+};
+
+const storage = new LocalStorage('jottr');
+console.log(storage);
 
 function reducer(state, action) {
   switch (action.type) {
     case 'change':
       const newData = {
-        title: '',
-        text: '',
+        ...EMPTY_NOTE_DATA,
         ...state[action.key],
         [action.parameter]: action.value,
       };
-      localStorage.setItem(action.key, JSON.stringify(newData));
+      storage.setItem(action.key, newData);
       return {
         ...state,
         [action.key]: newData,
       };
     case 'delete':
-      localStorage.removeItem(action.key);
+      storage.removeItem(action.key);
       const { [action.key]: _deleted, ...rest } = state;
       return rest;
     default:
@@ -30,18 +38,19 @@ function getInitialState(keys) {
   console.log('gis', keys);
   const state = {};
   keys.forEach((key) => {
-    const storedValue = localStorage.getItem(key);
-    console.log(storedValue);
-    state[key] = JSON.parse(storedValue);
+    state[key] = storage.getItem(key);
   });
   return state;
 }
 
 export default function NoteList() {
-  useStoredState('version', 1); // will be helpful if the API ever changes
-  const [keys, setKeys] = useStoredState('keys', []);
-  const [nextKey, setNextKey] = useStoredState('nextKey', 0);
+  const [keys, setKeys] = useStoredState(storage, 'keys', []);
+  const [nextKey, setNextKey] = useStoredState(storage, 'nextKey', 0);
   const [state, dispatch] = useReducer(reducer, keys, getInitialState);
+
+  useEffect(() => {
+    storage.setItem('version', 1); // will be helpful if the API ever changes
+  }, []);
 
   const makeOnMove = (index) => (direction) => {
     setKeys(move(keys, index, index + direction));
@@ -53,7 +62,7 @@ export default function NoteList() {
       {[nextKey, ...keys].map((key, index) => (
         <Note
           key={key}
-          data={state[key] || {}}
+          data={state[key] || EMPTY_NOTE_DATA}
           moveUpDisabled={index <= 1}
           moveDownDisabled={index === 0 || index === keys.length}
           deleteDisabled={index === 0}

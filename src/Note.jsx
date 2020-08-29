@@ -10,7 +10,7 @@ export default function Note({
   onChange,
 }) {
   return (
-    <div>
+    <div className="Note">
       <input
         value={data.title}
         onChange={({ target }) => onChange('title', target.value)}
