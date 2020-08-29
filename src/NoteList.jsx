@@ -58,10 +58,10 @@ export default function NoteList() {
 
   return (
     <>
-      <p>{JSON.stringify(state)}</p>
       {[nextKey, ...keys].map((key, index) => (
         <Note
           key={key}
+          autoFocus={index === 0}
           data={state[key] || EMPTY_NOTE_DATA}
           moveUpDisabled={index <= 1}
           moveDownDisabled={index === 0 || index === keys.length}

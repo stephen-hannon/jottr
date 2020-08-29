@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default function Note({
+  autoFocus,
   data,
   deleteDisabled,
   moveUpDisabled,
@@ -26,6 +27,7 @@ export default function Note({
         delete
       </button>
       <textarea
+        autoFocus={autoFocus}
         value={data.text}
         placeholder="Start typing..."
         onChange={({ target }) => onChange('text', target.value)}
