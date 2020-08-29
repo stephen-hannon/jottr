@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 export default function Note({
-  autoFocus,
   data,
   deleteDisabled,
   moveUpDisabled,
@@ -10,6 +9,14 @@ export default function Note({
   onMove,
   onChange,
 }) {
+  const textRef = useRef(null);
+  const [textHeight, setTextHeight] = useState(150);
+
+  useEffect(() => {
+    console.log(textRef.current.scrollHeight)
+    setTextHeight(Math.max(textRef.current.scrollHeight, 150));
+  }, [data.text]);
+
   return (
     <div className="Note">
       <input
@@ -27,7 +34,9 @@ export default function Note({
         delete
       </button>
       <textarea
-        autoFocus={autoFocus}
+        // TODO: Autofocus first textarea on page load
+        ref={textRef}
+        style={{height: textHeight}}
         value={data.text}
         placeholder="Start typing..."
         onChange={({ target }) => onChange('text', target.value)}
