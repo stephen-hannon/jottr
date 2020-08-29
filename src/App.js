@@ -5,10 +5,16 @@ import Note from './Note';
 function reducer(state, action) {
   switch (action.type) {
     case 'change':
-      localStorage.setItem(action.key, JSON.stringify(action.value));
+      const newData = {
+        title: '',
+        text: '',
+        ...state[action.key],
+        [action.parameter]: action.value,
+      };
+      localStorage.setItem(action.key, JSON.stringify(newData));
       return {
         ...state,
-        [action.key]: action.value,
+        [action.key]: newData,
       };
     case 'delete':
       localStorage.removeItem(action.key);
@@ -25,7 +31,7 @@ function getInitialState(keys) {
   keys.forEach((key) => {
     const storedValue = localStorage.getItem(key);
     console.log(storedValue);
-    state[key] = storedValue ? JSON.parse(storedValue) : `value ${key}`;
+    state[key] = JSON.parse(storedValue);
   });
   return state;
 }
@@ -55,8 +61,8 @@ function move(arr, fromInd, toInd) {
 
 export default function App() {
   useStoredState('version', 1); // will be helpful if the API ever changes
-  const [keys, setKeys] = useStoredState('keys', [0]);
-  const [nextKey, setNextKey] = useStoredState('nextKey', 1);
+  const [keys, setKeys] = useStoredState('keys', []);
+  const [nextKey, setNextKey] = useStoredState('nextKey', 0);
   const [state, dispatch] = useReducer(reducer, keys, getInitialState);
 
   const makeOnMove = (index) => (direction) => {
@@ -65,41 +71,22 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Type here</h1>
-      <button
-        onClick={() => {
-          setKeys([nextKey, ...keys]);
-          dispatch({ type: 'change', key: nextKey, value: `Input ${nextKey}` });
-          setNextKey(nextKey + 1);
-        }}>
-        add
-      </button>
+      <h1>Jottr</h1>
       <p>{JSON.stringify(state)}</p>
-      {/* <Note
-        title=""
-        moveUpDisabled
-        moveDownDisabled
-        deleteDisabled
-        onChange={value => {
-          setKeys([nextKey, ...keys]);
-          dispatch({ type: 'change', key: nextKey, value });
-          setNextKey(nextKey + 1);
-        }}
-      /> */}
       {[nextKey, ...keys].map((key, index) => (
         <Note
           key={key}
-          title={state[key] || ''}
+          data={state[key] || {}}
           moveUpDisabled={index <= 1}
           moveDownDisabled={index === 0 || index === keys.length}
           deleteDisabled={index === 0}
           onMove={makeOnMove(index - 1)}
-          onChange={(value) => {
+          onChange={(parameter, value) => {
             if (index === 0) {
               setKeys([nextKey, ...keys]);
               setNextKey(nextKey + 1);
             }
-            dispatch({ type: 'change', key, value });
+            dispatch({ type: 'change', key, value, parameter });
           }}
           onDelete={() => {
             setKeys(keys.filter((k) => k !== key));

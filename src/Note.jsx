@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function Note({
-  title,
+  data,
   deleteDisabled,
   moveUpDisabled,
   moveDownDisabled,
@@ -12,8 +12,8 @@ export default function Note({
   return (
     <div>
       <input
-        value={title}
-        onChange={({ target }) => onChange(target.value)}
+        value={data.title}
+        onChange={({ target }) => onChange('title', target.value)}
         placeholder="Title"
       />
       <button disabled={moveUpDisabled} onClick={() => onMove(-1)}>
@@ -25,7 +25,11 @@ export default function Note({
       <button disabled={deleteDisabled} onClick={onDelete}>
         delete
       </button>
-      <textarea placeholder="Start typing..." />
+      <textarea
+        value={data.text}
+        placeholder="Start typing..."
+        onChange={({ target }) => onChange('text', target.value)}
+      />
     </div>
   );
 }
