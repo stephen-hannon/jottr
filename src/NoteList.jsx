@@ -1,5 +1,6 @@
-import React, { useReducer, useState, useEffect } from 'react';
-import './styles.css';
+import React, { useReducer } from 'react';
+import { useStoredState } from './hooks';
+import { move } from './utils';
 import Note from './Note';
 
 function reducer(state, action) {
@@ -36,30 +37,7 @@ function getInitialState(keys) {
   return state;
 }
 
-function useStoredState(key, defaultValue) {
-  const [value, setValue] = useState(() => {
-    const storedValue = localStorage.getItem(key);
-
-    return storedValue === null ? defaultValue : JSON.parse(storedValue);
-  });
-
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
-
-  return [value, setValue];
-}
-
-function move(arr, fromInd, toInd) {
-  if (toInd < 0 || toInd >= arr.length) return arr;
-
-  const newArr = [...arr];
-  const value = newArr.splice(fromInd, 1)[0];
-  newArr.splice(toInd, 0, value);
-  return newArr;
-}
-
-export default function App() {
+export default function NoteList() {
   useStoredState('version', 1); // will be helpful if the API ever changes
   const [keys, setKeys] = useStoredState('keys', []);
   const [nextKey, setNextKey] = useStoredState('nextKey', 0);
@@ -70,8 +48,7 @@ export default function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Jottr</h1>
+    <>
       <p>{JSON.stringify(state)}</p>
       {[nextKey, ...keys].map((key, index) => (
         <Note
@@ -94,6 +71,6 @@ export default function App() {
           }}
         />
       ))}
-    </div>
+    </>
   );
 }
