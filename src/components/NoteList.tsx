@@ -1,7 +1,8 @@
 import React, { useReducer, useEffect } from 'react';
-import { useStoredState } from './hooks';
-import { move } from './utils';
-import LocalStorage from './Storage';
+
+import { useStoredState } from 'hooks';
+import { move } from 'utils';
+import LocalStorage from 'Storage';
 import Note from './Note';
 
 const EMPTY_NOTE_DATA = {
@@ -10,9 +11,25 @@ const EMPTY_NOTE_DATA = {
 };
 
 const storage = new LocalStorage('jottr');
-console.log(storage);
 
-function reducer(state, action) {
+interface NoteState {
+  [key: number]: { // TODO: make this reusable
+    title: string;
+    text: string;
+  };
+}
+
+type NoteAction = {
+  type: 'change';
+  key: number;
+  parameter: string;
+  value: string;
+} | {
+  type: 'delete';
+  key: number;
+};
+
+function reducer(state: NoteState, action: NoteAction) {
   switch (action.type) {
     case 'change':
       const newData = {
@@ -29,22 +46,20 @@ function reducer(state, action) {
       storage.removeItem(action.key);
       const { [action.key]: _deleted, ...rest } = state;
       return rest;
-    default:
-      throw new Error(`Unexpected action type ${action.type}`);
   }
 }
 
-function getInitialState(keys) {
+function getInitialState(keys: number[]): NoteState {
   console.log('gis', keys);
-  const state = {};
+  const state: NoteState = {};
   keys.forEach((key) => {
-    state[key] = storage.getItem(key);
+    state[key] = storage.getItem<number>(key);
   });
   return state;
 }
 
 export default function NoteList() {
-  const [keys, setKeys] = useStoredState(storage, 'keys', []);
+  const [keys, setKeys] = useStoredState<number[]>(storage, 'keys', []);
   const [nextKey, setNextKey] = useStoredState(storage, 'nextKey', 0);
   const [state, dispatch] = useReducer(reducer, keys, getInitialState);
 
@@ -52,7 +67,7 @@ export default function NoteList() {
     storage.setItem('version', 1); // will be helpful if the API ever changes
   }, []);
 
-  const makeOnMove = (index) => (direction) => {
+  const makeOnMove = (index: number) => (direction: number) => {
     setKeys(move(keys, index, index + direction));
   };
 

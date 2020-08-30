@@ -1,6 +1,19 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function Note({
+interface ComponentProps {
+  data: {
+    title: string;
+    text: string;
+  };
+  deleteDisabled?: boolean;
+  moveUpDisabled?: boolean;
+  moveDownDisabled?: boolean;
+  onDelete?: (event: React.MouseEvent) => void;
+  onMove: (delta: number) => void;
+  onChange: (parameter: string, newValue: string) => void;
+}
+
+const Note: React.FC<ComponentProps> = ({
   data,
   deleteDisabled,
   moveUpDisabled,
@@ -8,11 +21,13 @@ export default function Note({
   onDelete,
   onMove,
   onChange,
-}) {
-  const textRef = useRef(null);
-  const [textHeight, setTextHeight] = useState(150);
+}) => {
+  const textRef = useRef<HTMLTextAreaElement>(null);
+  const [textHeight, setTextHeight] = useState<number>(150);
 
   useEffect(() => {
+    if (!textRef.current) return;
+
     console.log(textRef.current.scrollHeight)
     setTextHeight(Math.max(textRef.current.scrollHeight, 150));
   }, [data.text]);
@@ -44,3 +59,5 @@ export default function Note({
     </div>
   );
 }
+
+export default Note;

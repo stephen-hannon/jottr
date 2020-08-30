@@ -1,5 +1,6 @@
 import React from 'react';
-import NoteList from './NoteList';
+
+import NoteList from 'components/NoteList';
 import './styles.css';
 
 export default function App() {

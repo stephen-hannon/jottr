@@ -1,4 +1,4 @@
-export function move(arr, fromInd, toInd) {
+export function move<T>(arr: T[], fromInd: number, toInd: number): T[] {
   if (toInd < 0 || toInd >= arr.length) return arr;
 
   const newArr = [...arr];

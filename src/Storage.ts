@@ -1,27 +1,32 @@
 // import { useEffect, useState } from 'react';
 
+type KeyType = string | number;
+
 export default class LocalStorage {
-  constructor(namespace) {
+  private namespace?: string;
+  private storage: Storage;
+
+  constructor(namespace?: string) {
     this.namespace = namespace;
     this.storage = window.localStorage;
   }
 
-  getNamespacedKey(key) {
-    return this.namespace ? `${this.namespace}_${key}` : key;
+  getNamespacedKey(key: KeyType): string {
+    return this.namespace ? `${this.namespace}_${key}` : key.toString();
   }
 
-  getItem(key, defaultValue) {
+  getItem<T>(key: KeyType, defaultValue?: T) {
     const value = this.storage.getItem(this.getNamespacedKey(key));
     return value === null && defaultValue !== undefined
       ? defaultValue
-      : JSON.parse(value);
+      : JSON.parse(value as string);
   }
 
-  removeItem(key) {
+  removeItem(key: KeyType) {
     this.storage.removeItem(this.getNamespacedKey(key));
   }
 
-  setItem(key, value) {
+  setItem(key: KeyType, value: unknown) {
     const stringifiedValue = JSON.stringify(value);
     this.storage.setItem(this.getNamespacedKey(key), stringifiedValue);
   }
