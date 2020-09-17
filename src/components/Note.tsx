@@ -15,9 +15,19 @@ const Title = styled.input`
   display: block;
   width: 100%;
   border: none;
-  border-bottom: 2px solid ${({theme}) => theme.colors.primary};
   font-weight: bold;
   font-size: 18px;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom-color linear ${({ theme }) => theme.duration}s;
+
+  &:hover {
+    border-bottom-color: ${({ theme }) => theme.colors.gray};
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom-color: ${({ theme }) => theme.colors.primary};
+  }
 `;
 
 const Body = styled.textarea`
