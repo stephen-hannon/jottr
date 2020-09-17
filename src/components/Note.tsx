@@ -69,7 +69,7 @@ const Note: React.FC<ComponentProps> = ({
   useEffect(() => {
     if (!textRef.current) return;
 
-    console.log(textRef.current.scrollHeight)
+    console.log(textRef.current.scrollHeight);
     setTextHeight(Math.max(textRef.current.scrollHeight, MIN_BODY_HEIGHT));
   }, [data.text]);
 
@@ -92,13 +92,13 @@ const Note: React.FC<ComponentProps> = ({
       <Body
         // TODO: Autofocus first textarea on page load
         ref={textRef}
-        style={{height: textHeight}}
+        style={{ height: textHeight }}
         value={data.text}
         placeholder="Start typing..."
         onChange={({ target }) => onChange('text', target.value)}
       />
     </NoteWrapper>
   );
-}
+};
 
 export default Note;

@@ -13,21 +13,24 @@ const EMPTY_NOTE_DATA = {
 const storage = new LocalStorage('jottr');
 
 interface NoteState {
-  [key: number]: { // TODO: make this reusable
+  [key: number]: {
+    // TODO: make this reusable
     title: string;
     text: string;
   };
 }
 
-type NoteAction = {
-  type: 'change';
-  key: number;
-  parameter: string;
-  value: string;
-} | {
-  type: 'delete';
-  key: number;
-};
+type NoteAction =
+  | {
+      type: 'change';
+      key: number;
+      parameter: string;
+      value: string;
+    }
+  | {
+      type: 'delete';
+      key: number;
+    };
 
 function reducer(state: NoteState, action: NoteAction) {
   switch (action.type) {

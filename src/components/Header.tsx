@@ -9,6 +9,6 @@ const Header: React.FC = () => (
   <HeaderWrapper>
     <h1>Jottr</h1>
   </HeaderWrapper>
-)
+);
 
 export default Header;
