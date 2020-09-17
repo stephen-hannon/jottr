@@ -14,6 +14,8 @@ const NoteWrapper = styled.div`
 const Title = styled.input`
   display: block;
   width: 100%;
+  border: none;
+  border-bottom: 2px solid ${({theme}) => theme.colors.primary};
   font-weight: bold;
   font-size: 18px;
 `;
