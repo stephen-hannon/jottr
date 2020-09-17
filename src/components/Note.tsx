@@ -6,8 +6,8 @@ const MIN_BODY_HEIGHT = 150;
 const NoteWrapper = styled.div`
   border-radius: 10px;
   box-shadow: 0 0 6px 0 #00000080;
-  margin: 30px auto;
-  padding: 30px 15px;
+  margin: 4rem auto;
+  padding: 2rem;
   max-width: 1000px;
 `;
 
@@ -16,7 +16,7 @@ const Title = styled.input`
   width: 100%;
   border: none;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 2rem;
   border-bottom: 2px solid transparent;
   transition: border-bottom-color linear ${({ theme }) => theme.duration}s;
 
@@ -34,7 +34,7 @@ const Body = styled.textarea`
   font-family: 'Source Code Pro', Consolas, Monaco, monospace;
   display: block;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 1.5rem;
 
   &:not(:focus) {
     height: ${MIN_BODY_HEIGHT}px !important;

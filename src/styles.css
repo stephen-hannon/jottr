@@ -2,12 +2,18 @@
   box-sizing: border-box;
 }
 
-html,
-input,
-button {
+html {
+  /* 10/16 * 100%, Make 1rem == 10px on typical browsers */
+  font-size: 62.5%;
   font-family: 'Source Sans Pro', sans-serif;
 }
 
 body {
-  margin: 15px;
+  font-size: 1.6rem;
+  margin: 1.5rem;
+}
+
+input,
+button {
+  font-family: inherit;
 }
