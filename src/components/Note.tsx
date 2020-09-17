@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { flexRow } from 'styles/flex';
 
 const MIN_BODY_HEIGHT = 150;
 
@@ -9,6 +10,10 @@ const NoteWrapper = styled.div`
   margin: 4rem auto;
   padding: 2rem;
   max-width: 1000px;
+`;
+
+const Header = styled.div`
+  ${flexRow}
 `;
 
 const Title = styled.input`
@@ -75,20 +80,22 @@ const Note: React.FC<ComponentProps> = ({
 
   return (
     <NoteWrapper>
-      <Title
-        value={data.title}
-        onChange={({ target }) => onChange('title', target.value)}
-        placeholder="Title"
-      />
-      <button disabled={moveUpDisabled} onClick={() => onMove(-1)}>
-        ↑
-      </button>
-      <button disabled={moveDownDisabled} onClick={() => onMove(1)}>
-        ↓
-      </button>
-      <button disabled={deleteDisabled} onClick={onDelete}>
-        delete
-      </button>
+      <Header>
+        <Title
+          value={data.title}
+          onChange={({ target }) => onChange('title', target.value)}
+          placeholder="Title"
+        />
+        <button disabled={moveUpDisabled} onClick={() => onMove(-1)}>
+          ↑
+        </button>
+        <button disabled={moveDownDisabled} onClick={() => onMove(1)}>
+          ↓
+        </button>
+        <button disabled={deleteDisabled} onClick={onDelete}>
+          delete
+        </button>
+      </Header>
       <Body
         // TODO: Autofocus first textarea on page load
         ref={textRef}
