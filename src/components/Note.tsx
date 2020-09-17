@@ -1,4 +1,33 @@
 import React, { useRef, useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+const MIN_BODY_HEIGHT = 150;
+
+const NoteWrapper = styled.div`
+  border-radius: 10px;
+  box-shadow: 0 0 6px 0 #00000080;
+  margin: 30px auto;
+  padding: 30px 15px;
+  max-width: 1000px;
+`;
+
+const Title = styled.input`
+  display: block;
+  width: 100%;
+  font-weight: bold;
+  font-size: 18px;
+`;
+
+const Body = styled.textarea`
+  font-family: 'Source Code Pro', Consolas, Monaco, monospace;
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+
+  &:not(:focus) {
+    height: ${MIN_BODY_HEIGHT}px !important;
+  }
+`;
 
 interface ComponentProps {
   data: {
@@ -29,12 +58,12 @@ const Note: React.FC<ComponentProps> = ({
     if (!textRef.current) return;
 
     console.log(textRef.current.scrollHeight)
-    setTextHeight(Math.max(textRef.current.scrollHeight, 150));
+    setTextHeight(Math.max(textRef.current.scrollHeight, MIN_BODY_HEIGHT));
   }, [data.text]);
 
   return (
-    <div className="Note">
-      <input
+    <NoteWrapper>
+      <Title
         value={data.title}
         onChange={({ target }) => onChange('title', target.value)}
         placeholder="Title"
@@ -48,7 +77,7 @@ const Note: React.FC<ComponentProps> = ({
       <button disabled={deleteDisabled} onClick={onDelete}>
         delete
       </button>
-      <textarea
+      <Body
         // TODO: Autofocus first textarea on page load
         ref={textRef}
         style={{height: textHeight}}
@@ -56,7 +85,7 @@ const Note: React.FC<ComponentProps> = ({
         placeholder="Start typing..."
         onChange={({ target }) => onChange('text', target.value)}
       />
-    </div>
+    </NoteWrapper>
   );
 }
 

@@ -11,26 +11,3 @@ button {
 body {
   margin: 15px;
 }
-
-.Note {
-  border-radius: 10px;
-  box-shadow: 0 0 6px 0 #00000080;
-  margin: 30px auto;
-  padding: 30px 15px;
-  max-width: 1000px;
-}
-
-input {
-  display: block;
-  width: 100%;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-textarea {
-  font-family: 'Source Code Pro', Consolas, Monaco, monospace;
-  overflow-y: hidden;
-  display: block;
-  width: 100%;
-  margin-top: 10px;
-}
