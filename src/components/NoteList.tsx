@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useCallback } from 'react';
 
 import { useStoredState } from 'hooks';
 import { move } from 'utils';
@@ -30,6 +30,18 @@ type NoteAction =
   | {
       type: 'delete';
       key: number;
+    }
+  | {
+      type: 'delete_sync';
+      key: number;
+    }
+  | {
+      type: 'change_sync';
+      key: number;
+      newValue: {
+        title: string;
+        text: string;
+      };
     };
 
 function reducer(state: NoteState, action: NoteAction) {
@@ -45,8 +57,15 @@ function reducer(state: NoteState, action: NoteAction) {
         ...state,
         [action.key]: newData,
       };
+    case 'change_sync':
+      return {
+        ...state,
+        [action.key]: action.newValue,
+      };
     case 'delete':
       storage.removeItem(action.key);
+    // fall through
+    case 'delete_sync':
       const { [action.key]: _deleted, ...rest } = state;
       return rest;
   }
@@ -69,6 +88,51 @@ export default function NoteList() {
   useEffect(() => {
     storage.setItem('version', 1); // will be helpful if the API ever changes
   }, []);
+
+  const storageCallback = useCallback(
+    (event: StorageEvent) => {
+      console.log(event);
+      if (event.newValue === event.oldValue) {
+        // No change
+        return;
+      }
+      if (event.key == null) {
+        // TODO: handle clearing storage
+        return;
+      }
+
+      const key = storage.removeNamespace(event.key);
+      const keyNumber = Number(key);
+      if (key === 'keys' && event.newValue) {
+        setKeys(JSON.parse(event.newValue));
+      } else if (key === 'nextKey' && event.newValue) {
+        setNextKey(JSON.parse(event.newValue));
+      } else if (!isNaN(keyNumber)) {
+        if (event.newValue === null) {
+          dispatch({
+            type: 'delete_sync',
+            key: keyNumber,
+          });
+        } else {
+          if (event.oldValue === null) {
+            setNextKey(nextKey + 1);
+          }
+          dispatch({
+            type: 'change_sync',
+            key: keyNumber,
+            newValue: JSON.parse(event.newValue),
+          });
+        }
+      }
+    },
+    [setKeys, setNextKey, nextKey]
+  );
+
+  useEffect(() => {
+    window.addEventListener('storage', storageCallback);
+
+    return () => window.removeEventListener('storage', storageCallback);
+  }, [storageCallback]);
 
   const makeOnMove = (index: number) => (direction: number) => {
     setKeys(move(keys, index, index + direction));

@@ -15,6 +15,13 @@ export default class LocalStorage {
     return this.namespace ? `${this.namespace}_${key}` : key.toString();
   }
 
+  removeNamespace(namespacedKey: string): string {
+    if (!this.namespace || !namespacedKey.startsWith(`${this.namespace}_`)) {
+      return namespacedKey;
+    }
+    return namespacedKey.replace(`${this.namespace}_`, '');
+  }
+
   getItem<T>(key: KeyType, defaultValue?: T) {
     const value = this.storage.getItem(this.getNamespacedKey(key));
     return value === null && defaultValue !== undefined
