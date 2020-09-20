@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
+
 import { flexRow } from 'styles/flex';
+import { NoteData } from 'types';
 
 const MIN_BODY_HEIGHT = 150;
 
@@ -47,10 +49,7 @@ const Body = styled.textarea`
 `;
 
 interface ComponentProps {
-  data: {
-    title: string;
-    text: string;
-  };
+  data: NoteData;
   deleteDisabled?: boolean;
   moveUpDisabled?: boolean;
   moveDownDisabled?: boolean;

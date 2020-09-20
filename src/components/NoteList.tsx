@@ -2,10 +2,11 @@ import React, { useReducer, useEffect, useCallback } from 'react';
 
 import { useStoredState } from 'hooks';
 import { move } from 'utils';
+import { NoteData } from 'types';
 import LocalStorage from 'Storage';
 import Note from './Note';
 
-const EMPTY_NOTE_DATA = {
+const EMPTY_NOTE_DATA: NoteData = {
   title: '',
   text: '',
 };
@@ -13,11 +14,7 @@ const EMPTY_NOTE_DATA = {
 const storage = new LocalStorage('jottr');
 
 interface NoteState {
-  [key: number]: {
-    // TODO: make this reusable
-    title: string;
-    text: string;
-  };
+  [key: number]: NoteData;
 }
 
 type NoteAction =
@@ -38,16 +35,13 @@ type NoteAction =
   | {
       type: 'change_sync';
       key: number;
-      newValue: {
-        title: string;
-        text: string;
-      };
+      newValue: NoteData;
     };
 
 function reducer(state: NoteState, action: NoteAction) {
   switch (action.type) {
     case 'change':
-      const newData = {
+      const newData: NoteData = {
         ...EMPTY_NOTE_DATA,
         ...state[action.key],
         [action.parameter]: action.value,
@@ -91,7 +85,6 @@ export default function NoteList() {
 
   const storageCallback = useCallback(
     (event: StorageEvent) => {
-      console.log(event);
       if (event.newValue === event.oldValue) {
         // No change
         return;
@@ -131,7 +124,9 @@ export default function NoteList() {
   useEffect(() => {
     window.addEventListener('storage', storageCallback);
 
-    return () => window.removeEventListener('storage', storageCallback);
+    return () => {
+      window.removeEventListener('storage', storageCallback);
+    };
   }, [storageCallback]);
 
   const makeOnMove = (index: number) => (direction: number) => {
