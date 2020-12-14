@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -85,13 +86,13 @@ const Note: React.FC<ComponentProps> = ({
           onChange={({ target }) => onChange('title', target.value)}
           placeholder="Title"
         />
-        <button disabled={moveUpDisabled} onClick={() => onMove(-1)}>
+        <button type="button" disabled={moveUpDisabled} onClick={() => onMove(-1)}>
           ↑
         </button>
-        <button disabled={moveDownDisabled} onClick={() => onMove(1)}>
+        <button type="button" disabled={moveDownDisabled} onClick={() => onMove(1)}>
           ↓
         </button>
-        <button disabled={deleteDisabled} onClick={onDelete}>
+        <button type="button" disabled={deleteDisabled} onClick={onDelete}>
           delete
         </button>
       </Header>

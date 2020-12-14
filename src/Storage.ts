@@ -4,6 +4,7 @@ type KeyType = string | number;
 
 export default class LocalStorage {
   private namespace?: string;
+
   private storage: Storage;
 
   constructor(namespace?: string) {

@@ -40,7 +40,7 @@ type NoteAction =
 
 function reducer(state: NoteState, action: NoteAction) {
   switch (action.type) {
-    case 'change':
+    case 'change': {
       const newData: NoteData = {
         ...EMPTY_NOTE_DATA,
         ...state[action.key],
@@ -51,6 +51,7 @@ function reducer(state: NoteState, action: NoteAction) {
         ...state,
         [action.key]: newData,
       };
+    }
     case 'change_sync':
       return {
         ...state,
@@ -59,9 +60,10 @@ function reducer(state: NoteState, action: NoteAction) {
     case 'delete':
       storage.removeItem(action.key);
     // fall through
-    case 'delete_sync':
+    case 'delete_sync': {
       const { [action.key]: _deleted, ...rest } = state;
       return rest;
+    }
   }
 }
 
@@ -100,7 +102,7 @@ export default function NoteList() {
         setKeys(JSON.parse(event.newValue));
       } else if (key === 'nextKey' && event.newValue) {
         setNextKey(JSON.parse(event.newValue));
-      } else if (!isNaN(keyNumber)) {
+      } else if (!Number.isNaN(keyNumber)) {
         if (event.newValue === null) {
           dispatch({
             type: 'delete_sync',

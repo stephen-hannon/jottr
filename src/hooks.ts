@@ -6,9 +6,9 @@ export function useStoredState<T>(
   key: string,
   defaultValue: T
 ): [T, Dispatch<SetStateAction<T>>] {
-  const [value, setValue] = useState<T>(() => {
-    return storage.getItem(key, defaultValue);
-  });
+  const [value, setValue] = useState<T>(() =>
+    storage.getItem(key, defaultValue)
+  );
 
   useEffect(() => {
     storage.setItem(key, value);
